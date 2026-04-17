@@ -1066,319 +1066,199 @@
         </footer>
     </div>
 
+    <script>
     // 动态获取当前文件的基础路径，解决本地和GitHub Pages路径兼容问题
     const getBasePath = () => {
-        const scriptName = 'resume.html';
-        const scripts = document.getElementsByTagName('script');
-        let basePath = '';
+    const scriptName = 'resume.html';
+    const scripts = document.getElementsByTagName('script');
+    let basePath = '';
 
-        // 尝试从脚本标签获取当前路径
-        for (let i = 0; i < scripts.length; i++) {
-            const src = scripts[i].src || '';
-            if (src.includes(scriptName)) {
-                const lastSlash = src.lastIndexOf('/');
-                if (lastSlash > 0) {
-                    basePath = src.substring(0, lastSlash + 1);
-                    break;
-                }
-            }
+    // 尝试从脚本标签获取当前路径
+    for (let i = 0; i < scripts.length; i++) { const src=scripts[i].src || '' ; if (src.includes(scriptName)) { const
+        lastSlash=src.lastIndexOf('/'); if (lastSlash> 0) {
+        basePath = src.substring(0, lastSlash + 1);
+        break;
+        }
+        }
         }
 
         // 如果未找到，回退到基于当前页面路径计算
         if (!basePath) {
-            const pathParts = window.location.pathname.split('/');
-            let filePath = pathParts.pop() || 'index.html';
-            // 移除查询参数
-            filePath = filePath.split('?')[0];
+        const pathParts = window.location.pathname.split('/');
+        let filePath = pathParts.pop() || 'index.html';
+        // 移除查询参数
+        filePath = filePath.split('?')[0];
 
-            // 找到 resume 相关文件的位置
-            const resumeIndex = filePath.toLowerCase().indexOf('resume');
-            if (resumeIndex > 0) {
-                basePath = pathParts.join('/') + '/';
-            } else {
-                // 假设案例文件在当前目录
-                basePath = pathParts.slice(0, pathParts.length - 1).join('/') + '/';
-                if (basePath === '/') basePath = '';
-            }
+        // 找到 resume 相关文件的位置
+        const resumeIndex = filePath.toLowerCase().indexOf('resume');
+        if (resumeIndex >= 0) {
+        basePath = pathParts.join('/') + '/';
+        } else {
+        // 假设案例文件在当前目录
+        basePath = pathParts.slice(0, pathParts.length - 1).join('/') + '/';
+        if (basePath === '/') basePath = '';
+        }
         }
 
         return basePath;
-    };
+        };
 
-    // 案例文件映射表
-    const CASE_FILES = {
+        // 案例文件映射表
+        const CASE_FILES = {
         'Chanel': 'Chanel_Report.html',
         'Reckitt': 'RB_Report.html',
         'SaintGobain': 'Saint-Gobain_Report.html',
         'Philips': 'Philips_Report.html'
-    };
+        };
 
-    // 初始化案例路径
-    document.addEventListener('DOMContentLoaded', () => {
+        // 初始化案例路径
+        document.addEventListener('DOMContentLoaded', () => {
         const basePath = getBasePath();
 
         // 为所有 iframe 动态设置 src
         document.querySelectorAll('.iframe-preview iframe').forEach(iframe => {
-            const originalSrc = iframe.getAttribute('src');
-            // 只替换相对路径部分
-            for (const key in CASE_FILES) {
-                if (originalSrc && originalSrc.includes(CASE_FILES[key])) {
-                    const newSrc = basePath + CASE_FILES[key];
-                    iframe.setAttribute('src', newSrc);
-                    break;
-                }
-            }
+        const originalSrc = iframe.getAttribute('src');
+        // 只替换相对路径部分
+        for (const key in CASE_FILES) {
+        if (originalSrc && originalSrc.includes(CASE_FILES[key])) {
+        const newSrc = basePath + CASE_FILES[key];
+        iframe.setAttribute('src', newSrc);
+        break;
+        }
+        }
         });
 
         // 为所有链接动态设置 href
         document.querySelectorAll('.project-card-face').forEach(link => {
-            const originalHref = link.getAttribute('href');
-            for (const key in CASE_FILES) {
-                if (originalHref && originalHref.includes(CASE_FILES[key])) {
-                    const newHref = basePath + CASE_FILES[key];
-                    link.setAttribute('href', newHref);
-                    break;
-                }
-            }
+        const originalHref = link.getAttribute('href');
+        for (const key in CASE_FILES) {
+        if (originalHref && originalHref.includes(CASE_FILES[key])) {
+        const newHref = basePath + CASE_FILES[key];
+        link.setAttribute('href', newHref);
+        break;
+        }
+        }
         });
 
         // 保存 basePath 供后续使用（如需要）
         window.CASE_BASE_PATH = basePath;
-    });
+        });
         const toggleBtn = document.getElementById('theme-toggle');
         const body = document.body;
 
         // 检查本地存储中的主题偏好
         const currentTheme = localStorage.getItem('theme');
         if (currentTheme === 'light') {
-            body.setAttribute('data-theme', 'light');
+        body.setAttribute('data-theme', 'light');
         }
 
         toggleBtn.addEventListener('click', () => {
-            if (body.getAttribute('data-theme') === 'light') {
-                body.removeAttribute('data-theme');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                body.setAttribute('data-theme', 'light');
-                localStorage.setItem('theme', 'light');
-            }
+        if (body.getAttribute('data-theme') === 'light') {
+        body.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'dark');
+        } else {
+        body.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+        }
         });
 
         // ==================== DotGrid 背景动画 ====================
         (function () {
-            const canvas = document.getElementById('dotgrid-canvas');
-            if (!canvas) return;
+        const canvas = document.getElementById('dotgrid-canvas');
+        if (!canvas) return;
 
-            const ctx = canvas.getContext('2d');
-            const dpr = window.devicePixelRatio || 1;
+        const ctx = canvas.getContext('2d');
+        const dpr = window.devicePixelRatio || 1;
 
-            // 配置参数
-            const config = {
-                dotSize: 3,
-                gap: 25,
-                baseColor: { r: 30, g: 40, b: 56 },      // #1f2838
-                activeColor: { r: 41, g: 251, b: 255 },  // #29fbff
-                proximity: 120,
-                speedTrigger: 80,
-                shockRadius: 200,
-                shockStrength: 3,
-                resistance: 0.92,
-                returnSpeed: 0.05
-            };
+        // 配置参数
+        const config = {
+        dotSize: 3,
+        gap: 25,
+        baseColor: { r: 30, g: 40, b: 56 }, // #1f2838
+        activeColor: { r: 41, g: 251, b: 255 }, // #29fbff
+        proximity: 120,
+        speedTrigger: 80,
+        shockRadius: 200,
+        shockStrength: 3,
+        resistance: 0.92,
+        returnSpeed: 0.05
+        };
 
-            let dots = [];
-            let pointer = { x: -1000, y: -1000, vx: 0, vy: 0, speed: 0, lastX: 0, lastY: 0, lastTime: 0 };
-            let animationId;
+        let dots = [];
+        let pointer = { x: -1000, y: -1000, vx: 0, vy: 0, speed: 0, lastX: 0, lastY: 0, lastTime: 0 };
+        let animationId;
 
-            // 初始化 Canvas 尺寸
-            function resize() {
-                const width = window.innerWidth;
-                const height = window.innerHeight;
-                canvas.width = width * dpr;
-                canvas.height = height * dpr;
-                canvas.style.width = width + 'px';
-                canvas.style.height = height + 'px';
-                ctx.scale(dpr, dpr);
-                buildGrid();
-            }
-
-            // 构建点阵网格
-            function buildGrid() {
-                const width = window.innerWidth;
-                const height = window.innerHeight;
-                const { dotSize, gap } = config;
-                const cell = dotSize + gap;
-
-                const cols = Math.floor((width + gap) / cell);
-                const rows = Math.floor((height + gap) / cell);
-
-                const gridW = cell * cols - gap;
-                const gridH = cell * rows - gap;
-
-                const startX = (width - gridW) / 2 + dotSize / 2;
-                const startY = (height - gridH) / 2 + dotSize / 2;
-
-                dots = [];
-                for (let y = 0; y < rows; y++) {
-                    for (let x = 0; x < cols; x++) {
-                        dots.push({
-                            cx: startX + x * cell,
-                            cy: startY + y * cell,
-                            xOffset: 0,
-                            yOffset: 0,
-                            vx: 0,
-                            vy: 0,
-                            targetX: 0,
-                            targetY: 0
-                        });
-                    }
-                }
-            }
-
-            // 颜色插值
-            function lerpColor(t) {
-                const { baseColor, activeColor } = config;
-                const r = Math.round(baseColor.r + (activeColor.r - baseColor.r) * t);
-                const g = Math.round(baseColor.g + (activeColor.g - baseColor.g) * t);
-                const b = Math.round(baseColor.b + (activeColor.b - baseColor.b) * t);
-                return `rgb(${r}, ${g}, ${b})`;
-            }
-
-            // 绘制帧
-            function draw() {
-                const width = window.innerWidth;
-                const height = window.innerHeight;
-                ctx.clearRect(0, 0, width, height);
-
-                const { dotSize, proximity, baseColor } = config;
-                const proxSq = proximity * proximity;
-
-                for (const dot of dots) {
-                    // 平滑回归原位（无弹性）
-                    dot.xOffset *= config.resistance;
-                    dot.yOffset *= config.resistance;
-
-                    const ox = dot.cx + dot.xOffset;
-                    const oy = dot.cy + dot.yOffset;
-
-                    // 计算与鼠标的距离
-                    const dx = dot.cx - pointer.x;
-                    const dy = dot.cy - pointer.y;
-                    const dsq = dx * dx + dy * dy;
-
-                    // 颜色渐变
-                    let color;
-                    if (dsq <= proxSq) {
-                        const dist = Math.sqrt(dsq);
-                        const t = 1 - dist / proximity;
-                        color = lerpColor(t);
-                    } else {
-                        color = `rgb(${baseColor.r}, ${baseColor.g}, ${baseColor.b})`;
-                    }
-
-                    // 绘制圆点
-                    ctx.beginPath();
-                    ctx.arc(ox, oy, dotSize / 2, 0, Math.PI * 2);
-                    ctx.fillStyle = color;
-                    ctx.fill();
-                }
-
-                animationId = requestAnimationFrame(draw);
-            }
-
-            // 鼠标移动处理
-            let lastMoveTime = 0;
-            function onMouseMove(e) {
-                const now = performance.now();
-                const dt = now - pointer.lastTime || 16;
-
-                pointer.x = e.clientX;
-                pointer.y = e.clientY;
-
-                const dx = e.clientX - pointer.lastX;
-                const dy = e.clientY - pointer.lastY;
-                pointer.vx = (dx / dt) * 1000;
-                pointer.vy = (dy / dt) * 1000;
-                pointer.speed = Math.hypot(pointer.vx, pointer.vy);
-
-                pointer.lastTime = now;
-                pointer.lastX = e.clientX;
-                pointer.lastY = e.clientY;
-
-                // 速度触发惯性效果
-                if (pointer.speed > config.speedTrigger && now - lastMoveTime > 50) {
-                    lastMoveTime = now;
-                    for (const dot of dots) {
-                        const dist = Math.hypot(dot.cx - pointer.x, dot.cy - pointer.y);
-                        if (dist < config.proximity) {
-                            const pushX = (dot.cx - pointer.x) * 0.1 + pointer.vx * 0.002;
-                            const pushY = (dot.cy - pointer.y) * 0.1 + pointer.vy * 0.002;
-                            dot.xOffset += pushX;
-                            dot.yOffset += pushY;
-                        }
-                    }
-                }
-            }
-
-            // 点击冲击波效果
-            function onClick(e) {
-                const cx = e.clientX;
-                const cy = e.clientY;
-
-                for (const dot of dots) {
-                    const dist = Math.hypot(dot.cx - cx, dot.cy - cy);
-                    if (dist < config.shockRadius) {
-                        const falloff = Math.max(0, 1 - dist / config.shockRadius);
-                        const pushX = (dot.cx - cx) * config.shockStrength * falloff;
-                        const pushY = (dot.cy - cy) * config.shockStrength * falloff;
-                        dot.targetX = pushX;
-                        dot.targetY = pushY;
-                    }
-                }
-            }
-
-            // 初始化
-            resize();
-            draw();
-
-            window.addEventListener('resize', resize, { passive: true });
-            window.addEventListener('mousemove', onMouseMove, { passive: true });
-            window.addEventListener('click', onClick);
-
-            // 深色/浅色模式适配
-            function updateColors() {
-                const isLight = document.body.getAttribute('data-theme') === 'light';
-                if (isLight) {
-                    config.baseColor = { r: 235, g: 235, b: 240 };
-                    config.activeColor = { r: 142, g: 119, b: 255 };
-                } else {
-                    config.baseColor = { r: 30, g: 40, b: 56 };
-                    config.activeColor = { r: 41, g: 251, b: 255 };
-                }
-            }
-
-            // 监听主题变化
-            const observer = new MutationObserver(updateColors);
-            observer.observe(document.body, { attributes: true, attributeFilter: ['data-theme'] });
-            updateColors();
-        })();
-
-        // ==================== 案例卡片翻转逻辑 ====================
-        function toggleFlip(btn) {
-            const container = btn.closest('.project-card-container');
-            container.classList.toggle('flipped');
+        // 初始化 Canvas 尺寸
+        function resize() {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px';
+        ctx.scale(dpr, dpr);
+        buildGrid();
         }
 
-        // ==================== 案例卡片高度同步逻辑 ====================
-        function syncProjectCardHeights() {
-            const containers = document.querySelectorAll('.project-card-container');
-            if (!containers.length) return;
+        // 构建点阵网格
+        function buildGrid() {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        const { dotSize, gap } = config;
+        const cell = dotSize + gap;
 
-            // 1. 重置高度以便重新计算
-            containers.forEach(c => c.style.height = 'auto');
+        const cols = Math.floor((width + gap) / cell);
+        const rows = Math.floor((height + gap) / cell);
 
-            // 2. 计算每个卡片所需的最大高度（正面和背面内容的最大值）
-            containers.forEach(container => {
+        const gridW = cell * cols - gap;
+        const gridH = cell * rows - gap;
+
+        const startX = (width - gridW) / 2 + dotSize / 2;
+        const startY = (height - gridH) / 2 + dotSize / 2;
+
+        dots = [];
+        for (let y = 0; y < rows; y++) { for (let x=0; x < cols; x++) { dots.push({ cx: startX + x * cell, cy: startY +
+            y * cell, xOffset: 0, yOffset: 0, vx: 0, vy: 0, targetX: 0, targetY: 0 }); } } } // 颜色插值 function
+            lerpColor(t) { const { baseColor, activeColor }=config; const r=Math.round(baseColor.r + (activeColor.r -
+            baseColor.r) * t); const g=Math.round(baseColor.g + (activeColor.g - baseColor.g) * t); const
+            b=Math.round(baseColor.b + (activeColor.b - baseColor.b) * t); return `rgb(${r}, ${g}, ${b})`; } // 绘制帧
+            function draw() { const width=window.innerWidth; const height=window.innerHeight; ctx.clearRect(0, 0, width,
+            height); const { dotSize, proximity, baseColor }=config; const proxSq=proximity * proximity; for (const dot
+            of dots) { // 平滑回归原位（无弹性） dot.xOffset *=config.resistance; dot.yOffset *=config.resistance; const ox=dot.cx
+            + dot.xOffset; const oy=dot.cy + dot.yOffset; // 计算与鼠标的距离 const dx=dot.cx - pointer.x; const dy=dot.cy -
+            pointer.y; const dsq=dx * dx + dy * dy; // 颜色渐变 let color; if (dsq <=proxSq) { const dist=Math.sqrt(dsq);
+            const t=1 - dist / proximity; color=lerpColor(t); } else { color=`rgb(${baseColor.r}, ${baseColor.g},
+            ${baseColor.b})`; } // 绘制圆点 ctx.beginPath(); ctx.arc(ox, oy, dotSize / 2, 0, Math.PI * 2);
+            ctx.fillStyle=color; ctx.fill(); } animationId=requestAnimationFrame(draw); } // 鼠标移动处理 let lastMoveTime=0;
+            function onMouseMove(e) { const now=performance.now(); const dt=now - pointer.lastTime || 16;
+            pointer.x=e.clientX; pointer.y=e.clientY; const dx=e.clientX - pointer.lastX; const dy=e.clientY -
+            pointer.lastY; pointer.vx=(dx / dt) * 1000; pointer.vy=(dy / dt) * 1000;
+            pointer.speed=Math.hypot(pointer.vx, pointer.vy); pointer.lastTime=now; pointer.lastX=e.clientX;
+            pointer.lastY=e.clientY; // 速度触发惯性效果 if (pointer.speed> config.speedTrigger && now - lastMoveTime > 50) {
+            lastMoveTime = now;
+            for (const dot of dots) {
+            const dist = Math.hypot(dot.cx - pointer.x, dot.cy - pointer.y);
+            if (dist < config.proximity) { const pushX=(dot.cx - pointer.x) * 0.1 + pointer.vx * 0.002; const
+                pushY=(dot.cy - pointer.y) * 0.1 + pointer.vy * 0.002; dot.xOffset +=pushX; dot.yOffset +=pushY; } } } }
+                // 点击冲击波效果 function onClick(e) { const cx=e.clientX; const cy=e.clientY; for (const dot of dots) { const
+                dist=Math.hypot(dot.cx - cx, dot.cy - cy); if (dist < config.shockRadius) { const falloff=Math.max(0, 1
+                - dist / config.shockRadius); const pushX=(dot.cx - cx) * config.shockStrength * falloff; const
+                pushY=(dot.cy - cy) * config.shockStrength * falloff; dot.targetX=pushX; dot.targetY=pushY; } } } // 初始化
+                resize(); draw(); window.addEventListener('resize', resize, { passive: true });
+                window.addEventListener('mousemove', onMouseMove, { passive: true }); window.addEventListener('click',
+                onClick); // 深色/浅色模式适配 function updateColors() { const
+                isLight=document.body.getAttribute('data-theme')==='light' ; if (isLight) { config.baseColor={ r: 235,
+                g: 235, b: 240 }; config.activeColor={ r: 142, g: 119, b: 255 }; } else { config.baseColor={ r: 30, g:
+                40, b: 56 }; config.activeColor={ r: 41, g: 251, b: 255 }; } } // 监听主题变化 const observer=new
+                MutationObserver(updateColors); observer.observe(document.body, { attributes: true, attributeFilter:
+                ['data-theme'] }); updateColors(); })(); //====================案例卡片翻转逻辑====================function
+                toggleFlip(btn) { const container=btn.closest('.project-card-container');
+                container.classList.toggle('flipped'); } //====================案例卡片高度同步逻辑====================function
+                syncProjectCardHeights() { const containers=document.querySelectorAll('.project-card-container'); if
+                (!containers.length) return; // 1. 重置高度以便重新计算 containers.forEach(c=> c.style.height = 'auto');
+
+                // 2. 计算每个卡片所需的最大高度（正面和背面内容的最大值）
+                containers.forEach(container => {
                 const front = container.querySelector('.face-front');
                 const back = container.querySelector('.face-back');
 
@@ -1389,34 +1269,34 @@
 
                 const maxHeight = Math.max(frontHeight, backHeight);
                 container.dataset.baseHeight = maxHeight;
-            });
+                });
 
-            // 3. 按行对齐（基于 offsetTop 判断是否在同一行）
-            let rows = {};
-            containers.forEach(container => {
+                // 3. 按行对齐（基于 offsetTop 判断是否在同一行）
+                let rows = {};
+                containers.forEach(container => {
                 const top = container.offsetTop;
                 if (!rows[top]) rows[top] = [];
                 rows[top].push(container);
-            });
+                });
 
-            for (let top in rows) {
+                for (let top in rows) {
                 const rowContainers = rows[top];
                 let rowMax = 0;
                 rowContainers.forEach(c => {
-                    rowMax = Math.max(rowMax, parseInt(c.dataset.baseHeight));
+                rowMax = Math.max(rowMax, parseInt(c.dataset.baseHeight));
                 });
                 rowContainers.forEach(c => {
-                    c.style.height = rowMax + 'px';
+                c.style.height = rowMax + 'px';
                 });
-            }
-        }
+                }
+                }
 
-        window.addEventListener('load', syncProjectCardHeights);
-        window.addEventListener('resize', syncProjectCardHeights);
+                window.addEventListener('load', syncProjectCardHeights);
+                window.addEventListener('resize', syncProjectCardHeights);
 
-        // 初始执行一次
-        setTimeout(syncProjectCardHeights, 100);
-    </script>
+                // 初始执行一次
+                setTimeout(syncProjectCardHeights, 100);
+                </script>
 
 </body>
 
